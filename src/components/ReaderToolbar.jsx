@@ -34,9 +34,6 @@ export default function ReaderToolbar({
         <p className="text-sm text-stone-500">
           {pageCount ? `Page ${pageNumber} of ${pageCount} - ${pagePercent}%` : 'Reader-focused ebook workspace'}
         </p>
-        <p className="text-sm text-stone-500">
-          If the PDF file is too large, please compress it first until it can be opened.
-        </p>
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
