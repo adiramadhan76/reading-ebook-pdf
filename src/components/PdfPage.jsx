@@ -1,13 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 
-export default function PdfPage({ pdf, pageNumber, scale, registerPage }) {
+export default function PdfPage({ pdf, pageNumber, scale, onPageRatioChange }) {
   const canvasRef = useRef(null);
-  const pageRef = useRef(null);
   const [status, setStatus] = useState('loading');
-
-  useEffect(() => {
-    registerPage(pageNumber, pageRef.current);
-  }, [pageNumber, registerPage]);
 
   useEffect(() => {
     let cancelled = false;
@@ -20,6 +15,7 @@ export default function PdfPage({ pdf, pageNumber, scale, registerPage }) {
       if (cancelled) return;
 
       const viewport = page.getViewport({ scale });
+      onPageRatioChange(viewport.width / viewport.height);
       const canvas = canvasRef.current;
       const context = canvas.getContext('2d', { alpha: false });
       const ratio = window.devicePixelRatio || 1;
@@ -47,17 +43,13 @@ export default function PdfPage({ pdf, pageNumber, scale, registerPage }) {
   }, [pdf, pageNumber, scale]);
 
   return (
-    <article
-      ref={pageRef}
-      data-page-number={pageNumber}
-      className="mx-auto mb-6 w-fit max-w-full scroll-mt-6"
-    >
+    <>
       <div className="mb-2 flex items-center justify-between text-xs font-medium uppercase tracking-normal text-stone-500">
         <span>Page {pageNumber}</span>
         {status === 'loading' && <span>Rendering</span>}
         {status === 'error' && <span>Unable to render</span>}
       </div>
-      <canvas className="max-w-full rounded border border-stone-200 bg-white shadow-sm" ref={canvasRef} />
-    </article>
+      <canvas className="mx-auto max-w-full rounded border border-stone-200 bg-white shadow-sm" ref={canvasRef} />
+    </>
   );
 }

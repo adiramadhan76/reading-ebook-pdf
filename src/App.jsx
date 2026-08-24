@@ -34,6 +34,10 @@ export default function App() {
 
   const handleFileSelected = useCallback((nextFile) => {
     localLibrary.currentFile = nextFile;
+    // A command belongs to the document that issued it. Keeping it would make
+    // the newly mounted reader jump to a page from the previous PDF.
+    setPageCommand(null);
+    setReaderState(defaultReaderState);
     setFile(nextFile);
   }, []);
 
